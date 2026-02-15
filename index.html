@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Madhavi Muttukuru | Data Analyst</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050810;
+      --bg2: #080d1a;
+      --cyan: #00e5ff;
+      --cyan2: #00b4cc;
+      --purple: #7c3aed;
+      --pink: #f472b6;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --glass: rgba(255,255,255,0.03);
+      --glass-border: rgba(0,229,255,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--cyan);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s;
+      mix-blend-mode: screen;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(0,229,255,0.4);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.18s ease;
+    }
+
+    /* Background Grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Glow Orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb1 { width: 500px; height: 500px; background: rgba(0,229,255,0.06); top: -100px; left: -100px; }
+    .orb2 { width: 400px; height: 400px; background: rgba(124,58,237,0.07); bottom: 100px; right: -100px; }
+    .orb3 { width: 300px; height: 300px; background: rgba(244,114,182,0.05); top: 50%; left: 50%; }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(20px);
+      background: rgba(5,8,16,0.7);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    nav ul { list-style: none; display: flex; gap: 35px; }
+    nav ul li a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: 0.3s;
+      position: relative;
+    }
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--cyan);
+      transition: 0.3s;
+    }
+    nav ul li a:hover { color: var(--cyan); }
+    nav ul li a:hover::after { width: 100%; }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 6%;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .hero-content { max-width: 750px; }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      border: 1px solid var(--glass-border);
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      background: rgba(0,229,255,0.05);
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(52px, 8vw, 90px);
+      font-weight: 800;
+      line-height: 1.0;
+      margin-bottom: 25px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero h1 .name-line { display: block; color: var(--text); }
+    .hero h1 .highlight {
+      display: block;
+      background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 15px;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: var(--bg);
+      padding: 12px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: 0.3s;
+      font-family: 'DM Mono', monospace;
+    }
+    .btn-primary:hover {
+      background: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0,229,255,0.4);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      padding: 12px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: 0.3s;
+      font-family: 'DM Mono', monospace;
+    }
+    .btn-outline:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    /* Hero right decoration */
+    .hero-visual {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 360px;
+      height: 360px;
+      animation: fadeUp 1s 0.4s ease both;
+    }
+
+    .hex-ring {
+      width: 100%; height: 100%;
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: spinSlow 20s linear infinite;
+    }
+    .hex-ring::before {
+      content: '';
+      position: absolute;
+      width: 80%; height: 80%;
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 50%;
+      animation: spinSlow 12s linear infinite reverse;
+    }
+    .hex-ring::after {
+      content: '';
+      position: absolute;
+      width: 60%; height: 60%;
+      border: 1px solid rgba(244,114,182,0.15);
+      border-radius: 50%;
+      animation: spinSlow 8s linear infinite;
+    }
+
+    .hex-center {
+      width: 120px; height: 120px;
+      background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(124,58,237,0.1));
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 1px;
+      text-align: center;
+      z-index: 1;
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    /* Orbit dots */
+    .dot {
+      position: absolute;
+      width: 8px; height: 8px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--cyan);
+    }
+    .dot1 { top: 5%; left: 50%; }
+    .dot2 { top: 50%; right: 3%; background: var(--purple); box-shadow: 0 0 12px var(--purple); }
+    .dot3 { bottom: 10%; left: 20%; background: var(--pink); box-shadow: 0 0 12px var(--pink); }
+
+    @keyframes spinSlow { to { transform: rotate(360deg); } }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,229,255,0.2); }
+      50% { box-shadow: 0 0 40px rgba(0,229,255,0.5); }
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .scroll-line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--cyan), transparent);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* Sections */
+    section { padding: 100px 6%; position: relative; z-index: 1; }
+
+    .label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 12px;
+    }
+
+    .section-heading {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      margin-bottom: 50px;
+      color: var(--text);
+    }
+
+    .section-heading span {
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* About */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-text { font-size: 15px; line-height: 2; color: #94a3b8; }
+    .about-text p { margin-bottom: 20px; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 25px;
+      transition: 0.3s;
+    }
+    .stat-card:hover {
+      border-color: var(--cyan);
+      background: rgba(0,229,255,0.03);
+      transform: translateY(-4px);
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--cyan);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label { font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+    /* Skills */
+    #skills { background: var(--bg2); }
+    .skills-wrapper { max-width: 900px; }
+
+    .skill-group { margin-bottom: 35px; }
+    .skill-group-name {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 15px;
+      border-left: 2px solid var(--cyan);
+      padding-left: 12px;
+    }
+
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .skill-tag {
+      padding: 8px 20px;
+      border: 1px solid var(--glass-border);
+      border-radius: 3px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--text);
+      background: var(--glass);
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-tag::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,229,255,0.1), transparent);
+      transition: 0.4s;
+    }
+    .skill-tag:hover::before { left: 100%; }
+    .skill-tag:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 25px;
+    }
+
+    .project-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 35px;
+      transition: 0.4s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      transform: scaleX(0);
+      transition: 0.4s;
+    }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0,229,255,0.25);
+      background: rgba(0,229,255,0.03);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .project-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 60px;
+      font-weight: 800;
+      color: rgba(0,229,255,0.08);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .project-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .project-card p {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 25px;
+    }
+
+    .tech-badge {
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 2px;
+      background: rgba(0,229,255,0.08);
+      color: var(--cyan);
+      border: 1px solid rgba(0,229,255,0.15);
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      transition: 0.3s;
+    }
+    .project-link:hover { gap: 14px; }
+    .project-link .arrow { font-size: 16px; }
+
+    /* Contact */
+    #contact { background: var(--bg2); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-desc {
+      font-size: 15px;
+      line-height: 2;
+      color: #94a3b8;
+      margin-bottom: 40px;
+    }
+
+    .contact-items { display: flex; flex-direction: column; gap: 20px; }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px 22px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      transition: 0.3s;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .contact-item:hover {
+      border-color: var(--cyan);
+      background: rgba(0,229,255,0.03);
+      transform: translateX(6px);
+    }
+    .contact-icon {
+      width: 36px; height: 36px;
+      background: rgba(0,229,255,0.1);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .contact-info { display: flex; flex-direction: column; }
+    .contact-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    .contact-val { font-size: 13px; color: var(--text); margin-top: 2px; }
+
+    /* Big text right side */
+    .contact-big {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(60px, 10vw, 110px);
+      font-weight: 800;
+      line-height: 0.9;
+      color: rgba(0,229,255,0.05);
+      letter-spacing: -3px;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Footer */
+    footer {
+      padding: 25px 6%;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+    footer span { color: var(--cyan); }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media(max-width: 900px) {
+      .hero-visual { display: none; }
+      #about { grid-template-columns: 1fr; gap: 40px; }
+      .contact-inner { grid-template-columns: 1fr; }
+      .contact-big { display: none; }
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="logo">MM</div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <div class="hero-tag">&#9679; Available for opportunities</div>
+      <h1>
+        <span class="name-line">Madhavi</span>
+        <span class="highlight">Muttukuru</span>
+      </h1>
+      <p class="hero-desc">
+        I work with data to build better decisions — crafting dashboards, extracting insights, and turning raw numbers into stories that actually matter.
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn-primary">View Work →</a>
+        <a href="#contact" class="btn-outline">Get in Touch</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hex-ring">
+        <div class="dot dot1"></div>
+        <div class="dot dot2"></div>
+        <div class="dot dot3"></div>
+        <div class="hex-center">DATA<br>ANALYST</div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div>
+      <p class="label reveal">// about me</p>
+      <h2 class="section-heading reveal">Turning <span>Data</span><br>Into Insight</h2>
+      <div class="about-text reveal">
+        <p>I'm a data analyst passionate about making numbers speak clearly. With a background spanning Python, SQL, and web development, I approach every dataset with both technical rigor and a storyteller's instinct.</p>
+        <p>I believe the best dashboards don't just show data — they answer questions before they're asked. That's the experience I build toward.</p>
+      </div>
+    </div>
+
+    <div class="about-stats">
+      <div class="stat-card reveal">
+        <div class="stat-num">2+</div>
+        <div class="stat-label">Projects Built</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Tools Mastered</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Committed</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Curiosity</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <p class="label reveal">// what i use</p>
+    <h2 class="section-heading reveal">Skills & <span>Tools</span></h2>
+
+    <div class="skills-wrapper">
+      <div class="skill-group reveal">
+        <div class="skill-group-name">Data & Analytics</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">Excel</span>
+          <span class="skill-tag">Power BI</span>
+          <span class="skill-tag">Data Visualization</span>
+          <span class="skill-tag">Storytelling with Data</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal">
+        <div class="skill-group-name">Development</div>
+        <div class="skill-tags">
+          <span class="skill-tag">HTML</span>
+          <span class="skill-tag">CSS</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Dashboard Development</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal">
+        <div class="skill-group-name">Core Strengths</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Problem Solving</span>
+          <span class="skill-tag">Insight Communication</span>
+          <span class="skill-tag">Data Cleaning</span>
+          <span class="skill-tag">Business Analysis</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <p class="label reveal">// recent work</p>
+    <h2 class="section-heading reveal">Featured <span>Projects</span></h2>
+
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-num">01</div>
+        <h3>Smart Recruitment Dashboard</h3>
+        <p>Web-based system to manage candidate data, streamline recruitment workflows, and surface hiring analytics in real time.</p>
+        <div class="project-tech">
+          <span class="tech-badge">HTML</span>
+          <span class="tech-badge">CSS</span>
+          <span class="tech-badge">JavaScript</span>
+          <span class="tech-badge">Python</span>
+        </div>
+        <a href="https://github.com/r190577-cmyk/recruitment-dashboard--for-Company" target="_blank" class="project-link">
+          View on GitHub <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-num">02</div>
+        <h3>VoiceForDF — VoxAble</h3>
+        <p>Accessibility platform enabling seamless communication for deaf and mute users through intelligent voice and visual processing.</p>
+        <div class="project-tech">
+          <span class="tech-badge">HTML</span>
+          <span class="tech-badge">CSS</span>
+          <span class="tech-badge">JavaScript</span>
+          <span class="tech-badge">Python</span>
+        </div>
+        <a href="https://github.com/r190577-cmyk/Vocal-Deliver" target="_blank" class="project-link">
+          View on GitHub <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div>
+        <p class="label reveal">// let's connect</p>
+        <h2 class="section-heading reveal">Get In <span>Touch</span></h2>
+        <p class="contact-desc reveal">Open to data analyst roles, freelance projects, and collaborations. Let's build something meaningful together.</p>
+
+        <div class="contact-items">
+          <a href="mailto:madhavimuttukuru0@gmail.com" class="contact-item reveal">
+            <div class="contact-icon">✉</div>
+            <div class="contact-info">
+              <span class="contact-label">Email</span>
+              <span class="contact-val">madhavimuttukuru0@gmail.com</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/r190577-cmyk" target="_blank" class="contact-item reveal">
+            <div class="contact-icon">⌥</div>
+            <div class="contact-info">
+              <span class="contact-label">GitHub</span>
+              <span class="contact-val">github.com/r190577-cmyk</span>
+            </div>
+          </a>
+
+          <div class="contact-item reveal">
+            <div class="contact-icon">◎</div>
+            <div class="contact-info">
+              <span class="contact-label">Location</span>
+              <span class="contact-val">Chittoor, Andhra Pradesh</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-big reveal">
+        SAY<br>HELLO.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span>© 2026 Madhavi Muttukuru</span>
+    <span>Designed with <span style="color:var(--pink)">♥</span> & code</span>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Hover effects on cursor
+    document.querySelectorAll('a, button, .skill-tag, .stat-card, .project-card, .contact-item').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1.4)';
+        ring.style.borderColor = 'rgba(0,229,255,0.6)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.borderColor = 'rgba(0,229,255,0.4)';
+      });
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
