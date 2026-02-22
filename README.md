@@ -6,7 +6,7 @@ My data analytics and Power BI projects showcasing data visualization, analysis,
 Personal portfolio website showcasing my work as a Data Analyst.
 
 ## 🔗 Live Site
-[View Portfolio](https://yourusername.github.io)
+[View Portfolio](https://r190577-cmyk.github.io/madhavi-data-analytics/)
 
 ## 📌 About
 Built to present my skills, projects, and contact info in a clean, modern way.
